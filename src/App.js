@@ -15,32 +15,49 @@ class App extends React.Component {
     this.state = {
       logName: '',
       isDisabled: true,
+      loading: false,
+      saved: false,
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.nameValidation = this.nameValidation.bind(this);
+    this.clickButton = this.clickButton.bind(this);
   }
 
   onInputChange({ target }) {
     const { name, value } = target;
     this.setState(
       { [name]: value },
-      this.nameValidation(),
+      () => this.nameValidation(),
     );
   }
 
   nameValidation() {
     const { logName } = this.state;
-    const nameLength = 2;
-    console.log(logName);
+    const nameLength = 3;
     if (logName.length >= nameLength) {
       this.setState(
         { isDisabled: false },
       );
+    } else {
+      this.setState(
+        { isDisabled: true },
+      );
     }
   }
 
+  async clickButton() {
+    const { logName } = this.state;
+    this.setState(
+      { loading: true },
+    );
+    await createUser({ name: logName });
+    this.setState(
+      { saved: true },
+    );
+  }
+
   render() {
-    const { logName, isDisabled } = this.state;
+    const { logName, isDisabled, loading, saved } = this.state;
     return (
       <BrowserRouter>
         <Switch>
@@ -53,7 +70,9 @@ class App extends React.Component {
                 name={ logName }
                 isDisabled={ isDisabled }
                 onInputChange={ this.onInputChange }
-                createUser={ createUser({ name: logName }) }
+                clickButton={ this.clickButton }
+                loading={ loading }
+                saved={ saved }
               />)
             }
           />
