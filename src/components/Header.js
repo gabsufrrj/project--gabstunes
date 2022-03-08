@@ -36,9 +36,9 @@ class Header extends React.Component {
           </div>
         )
           : (
-            <p>
+            <div>
               <Carregando />
-            </p>
+            </div>
           )}
       </header>
     );

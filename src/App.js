@@ -17,9 +17,11 @@ class App extends React.Component {
       isDisabled: true,
       loading: false,
       saved: false,
+      searchInput: '',
+      searchDisabled: true,
     };
     this.onInputChange = this.onInputChange.bind(this);
-    this.nameValidation = this.nameValidation.bind(this);
+    this.generalValidation = this.generalValidation.bind(this);
     this.clickButton = this.clickButton.bind(this);
   }
 
@@ -27,12 +29,13 @@ class App extends React.Component {
     const { name, value } = target;
     this.setState(
       { [name]: value },
-      () => this.nameValidation(),
+      () => this.generalValidation(),
     );
   }
 
-  nameValidation() {
-    const { logName } = this.state;
+  generalValidation() {
+    const { logName, searchInput } = this.state;
+    const searchLength = 2;
     const nameLength = 3;
     if (logName.length >= nameLength) {
       this.setState(
@@ -41,6 +44,15 @@ class App extends React.Component {
     } else {
       this.setState(
         { isDisabled: true },
+      );
+    }
+    if (searchInput.length >= searchLength) {
+      this.setState(
+        { searchDisabled: false },
+      );
+    } else {
+      this.setState(
+        { searchDisabled: true },
       );
     }
   }
@@ -57,7 +69,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { logName, isDisabled, loading, saved } = this.state;
+    const { logName,
+      isDisabled, loading, saved, searchInput, searchDisabled } = this.state;
     return (
       <BrowserRouter>
         <Switch>
@@ -76,7 +89,18 @@ class App extends React.Component {
               />)
             }
           />
-          <Route exact path="/search" component={ Search } />
+          <Route
+            exact
+            path="/search"
+            render={
+              (props) => (<Search
+                { ...props }
+                name={ searchInput }
+                searchDisabled={ searchDisabled }
+                onInputChange={ this.onInputChange }
+              />)
+            }
+          />
           <Route exact path="/album/:id" component={ Album } />
           <Route exact path="/favorites" component={ Favorites } />
           <Route exact path="/profile" component={ Profile } />
