@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Album from './pages/Album';
 import Favorites from './pages/Favorites';
+import searchAlbumsAPI from './services/searchAlbumsAPI';
 import { createUser } from './services/userAPI';
 
 class App extends React.Component {
@@ -19,10 +20,15 @@ class App extends React.Component {
       saved: false,
       searchInput: '',
       searchDisabled: true,
+      searchLoading: false,
+      searchLoadedFinish: false,
+      artistData: [],
+      artistName: '',
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.generalValidation = this.generalValidation.bind(this);
     this.clickButton = this.clickButton.bind(this);
+    this.searchClick = this.searchClick.bind(this);
   }
 
   onInputChange({ target }) {
@@ -57,6 +63,21 @@ class App extends React.Component {
     }
   }
 
+  async searchClick() {
+    const { searchInput } = this.state;
+    this.setState(
+      { searchLoading: true,
+        artistName: searchInput },
+    );
+    const artistData = await searchAlbumsAPI(searchInput);
+    this.setState(
+      { searchInput: '',
+        searchLoading: false,
+        searchLoadedFinish: true,
+        artistData },
+    );
+  }
+
   async clickButton() {
     const { logName } = this.state;
     this.setState(
@@ -70,7 +91,15 @@ class App extends React.Component {
 
   render() {
     const { logName,
-      isDisabled, loading, saved, searchInput, searchDisabled } = this.state;
+      isDisabled,
+      loading,
+      saved,
+      searchInput,
+      searchDisabled,
+      searchLoading,
+      searchLoadedFinish,
+      artistData,
+      artistName } = this.state;
     return (
       <BrowserRouter>
         <Switch>
@@ -98,6 +127,11 @@ class App extends React.Component {
                 name={ searchInput }
                 searchDisabled={ searchDisabled }
                 onInputChange={ this.onInputChange }
+                searchClick={ this.searchClick }
+                searchLoading={ searchLoading }
+                searchLoadedFinish={ searchLoadedFinish }
+                artistData={ artistData }
+                artistName={ artistName }
               />)
             }
           />
