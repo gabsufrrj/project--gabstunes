@@ -33,7 +33,6 @@ class Album extends React.Component {
 
   render() {
     const { requestMusic, isLoading } = this.state;
-    console.log(requestMusic);
     return (
       <div data-testid="page-album">
         <Header />
@@ -58,6 +57,8 @@ class Album extends React.Component {
                 key={ index }
                 trackName={ music.trackName }
                 previewUrl={ music.previewUrl }
+                trackId={ music.trackId }
+                requestMusic={ requestMusic }
               />)
           ))
         }
