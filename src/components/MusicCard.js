@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Carregando from '../pages/Carregando';
 
 class MusicCard extends React.Component {
@@ -41,11 +41,19 @@ class MusicCard extends React.Component {
         { checked: true },
       );
     } else {
+      removeSong(foundMusic);
       this.setState(
         { checked: false },
       );
     }
   }
+
+  // async removeFavorite({ target }) {
+  //   const { requestMusic } = this.props;
+  //   const foundMusic = requestMusic
+  //     .find((music) => Number(music.trackId) === Number(target.name));
+  //   await removeSong(foundMusic);
+  // }
 
   render() {
     const { previewUrl, trackName, trackId } = this.props;
