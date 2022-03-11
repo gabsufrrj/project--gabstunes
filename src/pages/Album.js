@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
 import Carregando from './Carregando';
+import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends React.Component {
   constructor() {
@@ -15,8 +16,11 @@ class Album extends React.Component {
     this.handleMusic = this.handleMusic.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.handleMusic();
+    await getFavoriteSongs();
+    this.setState(
+    );
   }
 
   async handleMusic() {
